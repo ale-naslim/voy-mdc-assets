@@ -3,12 +3,18 @@
   if(!sec) return;
   var v = sec.querySelector('video.bg-video');
   var mq = window.matchMedia('(max-width:900px)');
-  var FONTES = { dk:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-curto.mp4?v=04f71b04','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-curto-poster.webp?v=6692d3aa'],
-                 mb:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-9x16-curto.mp4?v=868a04d3','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-9x16-curto-poster.webp?v=961f8667'] };
+  var FONTES = { dk:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-curto.mp4?v=04f71b04','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-curto-poster.webp?v=b6450be8'],
+                 mb:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-9x16-curto.mp4?v=868a04d3','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-9x16-curto-poster.webp?v=2203ecfe'] };
   function depoisDoLoad(fn){ if(document.readyState === 'complete') fn(); else window.addEventListener('load', fn, {once:true}); }
   function tocar(){ if(!v || !v.getAttribute('src')) return; var p = v.play(); if(p && p.catch) p.catch(function(){}); }
   
   var liberado = false;
+  function redeRuim(){
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(!c) return false;
+    if(c.saveData) return true;
+    return /(^|-)2g$/.test(c.effectiveType || '');
+  }
   function fonte(){ return mq.matches ? FONTES.mb : FONTES.dk; }
   function escolher(){
     if(!v) return;
@@ -19,7 +25,7 @@
     if(sec.classList.contains('is-in')) tocar();
   }
   escolher();
-  depoisDoLoad(function(){ liberado = true; escolher(); });
+  depoisDoLoad(function(){ if(redeRuim()) return; liberado = true; escolher(); });
   if(mq.addEventListener) mq.addEventListener('change', escolher); else if(mq.addListener) mq.addListener(escolher);
   
   var contador = sec.querySelector('.conta');
