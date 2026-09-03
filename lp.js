@@ -158,67 +158,6 @@
 })();
 ;
 (function(){
-  var sec = document.getElementById('nu-inter-b');
-  if(!sec) return;
-  var campo = sec.querySelector('.nu-campo');
-  var quad  = sec.querySelector('.nu-quad');
-  var mais  = Array.prototype.slice.call(sec.querySelectorAll('.nu-w.mais'));
-  var mqMob = window.matchMedia('(max-width:900px)');
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  if(reduce){ sec.classList.add('is-in'); return; }
-  
-  var A = 1.45, B = 1.4, QUAD = 420;
-  var rafId = 0, parados = 0, ultimo = null, visivel = true;
-  function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
-  function aplicar(){
-    var r  = sec.getBoundingClientRect();
-    var vh = window.innerHeight || document.documentElement.clientHeight || 1;
-    var H  = r.height || vh;
-    var q  = clamp((vh - r.top) / H, 0, 2.2);
-    var p  = clamp((vh - r.top) / (vh + H), 0, 1);      
-    var chave = Math.round(q*1000) + '|' + Math.round(p*1000) + '|' + (mais[0] ? Math.round(mais[0].getBoundingClientRect().top) : 0);
-    if(chave === ultimo) return false;
-    ultimo = chave;
-    var campoY = (A - B*q) * H;                       
-    if(campo) campo.style.transform = 'translate3d(0,' + campoY.toFixed(1) + 'px,0)';
-    
-    var ty = (0.66 - p) * (mqMob.matches ? 2000 : 2600);
-    if(quad)  quad.style.transform  = 'translate3d(0,' + ty.toFixed(1) + 'px,0)';
-    var campoTop = r.top + campoY;
-    for(var i=0;i<mais.length;i++){
-      var rs = mais[i].getBoundingClientRect();
-      var off = clamp(campoTop - rs.top, -2*rs.height, rs.height + 2);
-      mais[i].style.backgroundPosition = '0 ' + off.toFixed(1) + 'px';
-    }
-    if(q >= 0.55) sec.classList.add('is-in');
-    return true;
-  }
-  function loop(){
-    if(!visivel){ rafId = 0; return; }
-    var mudou = aplicar();
-    parados = mudou ? 0 : parados + 1;
-    if(parados > 60){ rafId = 0; return; }
-    rafId = requestAnimationFrame(loop);
-  }
-  function acordar(){ parados = 0; if(!rafId) rafId = requestAnimationFrame(loop); }
-  window.addEventListener('scroll', acordar, {passive:true});
-  window.addEventListener('resize', acordar);
-  window.addEventListener('load', acordar);
-  if('IntersectionObserver' in window){
-    new IntersectionObserver(function(es){
-      visivel = es[es.length-1].isIntersecting;
-      if(visivel) acordar();
-    },{rootMargin:'200px 0px'}).observe(sec);
-  }
-  setTimeout(function(){
-    if(!sec.classList.contains('is-in') && sec.getBoundingClientRect().top < (window.innerHeight||0)*0.9){
-      sec.classList.add('is-in'); if(campo) campo.style.transform = 'none';
-    }
-  }, 2500);
-  acordar();
-})();
-;
-(function(){
   var sec = document.getElementById('nu-trilho');
   if(!sec) return;
   var palco = sec.querySelector('.palco');
