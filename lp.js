@@ -23,12 +23,13 @@
     if(matchMedia('(prefers-reduced-motion:reduce)').matches){ el.textContent = para.toLocaleString('pt-BR'); return; }
     el.textContent = de.toLocaleString('pt-BR');
     el.style.minWidth = el.offsetWidth + 'px';        
-    var t0 = 0, DUR = 900;
+    var t0 = 0, DUR = 1500, ult = '';
     function passo(ts){
       if(!t0) t0 = ts;
       var p = Math.min(1, (ts - t0) / DUR);
-      var e = 1 - Math.pow(1 - p, 3);                 
-      el.textContent = Math.round(de + (para - de) * e).toLocaleString('pt-BR');
+      var e = 1 - Math.pow(1 - p, 1.4);
+      var txt = Math.round(de + (para - de) * e).toLocaleString('pt-BR');
+      if(txt !== ult){ el.textContent = txt; ult = txt; }
       if(p < 1) requestAnimationFrame(passo);
       else { el.textContent = para.toLocaleString('pt-BR');
              el.style.transition = 'min-width .5s cubic-bezier(.22,1,.36,1)';
