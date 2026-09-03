@@ -31,7 +31,7 @@
     function passo(ts){
       if(!t0) t0 = ts;
       var p = Math.min(1, (ts - t0) / DUR);
-      var e = 1 - Math.pow(1 - p, 1.4);
+      var e = -(Math.cos(Math.PI * p) - 1) / 2;
       var txt = Math.round(de + (para - de) * e).toLocaleString('pt-BR');
       if(txt !== ult){ el.textContent = txt; ult = txt; }
       if(p < 1) requestAnimationFrame(passo);
@@ -175,7 +175,7 @@
     }
   }
   
-  var LEITURA = 6.2;
+  var LEITURA = 11;
   function ritmo(){
     var tela = largura();
     for (var i = 0; i < tracks.length; i++){
