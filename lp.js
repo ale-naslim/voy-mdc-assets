@@ -175,7 +175,7 @@
     }
   }
   
-  var LEITURA = 11;
+  var LEITURA = 6.2;
   function ritmo(){
     var tela = largura();
     for (var i = 0; i < tracks.length; i++){
