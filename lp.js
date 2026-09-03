@@ -17,11 +17,15 @@
   escolher();
   if(mq.addEventListener) mq.addEventListener('change', escolher); else if(mq.addListener) mq.addListener(escolher);
   
+  var contador = sec.querySelector('.conta');
+  var vaiContar = false;
+  if(contador && !matchMedia('(prefers-reduced-motion:reduce)').matches){
+    contador.textContent = (+contador.getAttribute('data-de')).toLocaleString('pt-BR');
+    vaiContar = true;
+  }
   function contar(){
-    var el = sec.querySelector('.conta'); if(!el) return;
+    var el = contador; if(!el || !vaiContar) return;
     var de = +el.getAttribute('data-de'), para = +el.getAttribute('data-para');
-    if(matchMedia('(prefers-reduced-motion:reduce)').matches){ el.textContent = para.toLocaleString('pt-BR'); return; }
-    el.textContent = de.toLocaleString('pt-BR');
     el.style.minWidth = el.offsetWidth + 'px';        
     var t0 = 0, DUR = 1500, ult = '';
     function passo(ts){
