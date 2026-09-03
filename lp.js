@@ -506,6 +506,14 @@
       fl.tabIndex = on ? 0 : -1;
     },{threshold:.2});
     ctas.forEach(function(c){ io.observe(c); });
+    
+    var trilho = document.getElementById('nu-trilho');
+    if(trilho){
+      new IntersectionObserver(function(es){
+        var dentro = es[es.length-1].isIntersecting && matchMedia('(max-width:900px)').matches;
+        fl.classList.toggle('esta-no-trilho', dentro);
+      },{threshold:0}).observe(trilho);
+    }
   }
   if(document.readyState === 'complete') ligar(); else addEventListener('load', ligar);
 })();
