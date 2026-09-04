@@ -28,32 +28,7 @@
   depoisDoLoad(function(){ if(redeRuim()) return; liberado = true; escolher(); });
   if(mq.addEventListener) mq.addEventListener('change', escolher); else if(mq.addListener) mq.addListener(escolher);
   
-  var contador = sec.querySelector('.conta');
-  var vaiContar = false;
-  if(contador && !matchMedia('(prefers-reduced-motion:reduce)').matches){
-    contador.textContent = (+contador.getAttribute('data-de')).toLocaleString('pt-BR');
-    vaiContar = true;
-  }
-  function contar(){
-    var el = contador; if(!el || !vaiContar) return;
-    var de = +el.getAttribute('data-de'), para = +el.getAttribute('data-para');
-    el.style.minWidth = el.offsetWidth + 'px';        
-    var t0 = 0, DUR = 1500, ult = '';
-    function passo(ts){
-      if(!t0) t0 = ts;
-      var p = Math.min(1, (ts - t0) / DUR);
-      var e = -(Math.cos(Math.PI * p) - 1) / 2;
-      var txt = Math.round(de + (para - de) * e).toLocaleString('pt-BR');
-      if(txt !== ult){ el.textContent = txt; ult = txt; }
-      if(p < 1) requestAnimationFrame(passo);
-      else { el.textContent = para.toLocaleString('pt-BR');
-             el.style.transition = 'min-width .5s cubic-bezier(.22,1,.36,1)';
-             el.style.minWidth = '0px'; }
-    }
-    requestAnimationFrame(passo);
-  }
-  
-  function entrar(){ sec.classList.add('is-in'); setTimeout(contar, 1150); setTimeout(function(){ depoisDoLoad(tocar); }, 1100); }
+  function entrar(){ sec.classList.add('is-in'); setTimeout(function(){ depoisDoLoad(tocar); }, 1100); }
   var pronto = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
   var deu = false; function uma(){ if(deu) return; deu = true; requestAnimationFrame(function(){ requestAnimationFrame(entrar); }); }
   pronto.then(uma).catch(uma); setTimeout(uma, 900);   
