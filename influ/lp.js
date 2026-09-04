@@ -39,8 +39,8 @@
 ;
 (function(){
   var sec = document.getElementById('nu-depo'); if(!sec) return;
-  var trilha = sec.querySelector('.trilha'), cards = [].slice.call(sec.querySelectorAll('.card'));
-  var vids = cards.filter(function(c){ return c.classList.contains('card--video'); });
+  var trilha = sec.querySelector('.trilha'), cards = [].slice.call(sec.querySelectorAll('.nu-card'));
+  var vids = cards.filter(function(c){ return c.classList.contains('nu-card--video'); });
   var ant = sec.querySelector('.seta-ant'), prox = sec.querySelector('.seta-prox');
   var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   
@@ -57,7 +57,7 @@
         else { try{ v.pause(); }catch(err){} } });
     },{threshold:.35});
     vids.forEach(function(c){ io.observe(c); });
-    [].forEach.call(sec.querySelectorAll('.card'), function(c){ perto.observe(c); });
+    [].forEach.call(sec.querySelectorAll('.nu-card'), function(c){ perto.observe(c); });
   }
   
   function silenciar(){ vids.forEach(function(o){ var ov = o.querySelector('video'); ov.muted = true; o.classList.remove('com-som'); var b = o.querySelector('.som'); if(b) b.setAttribute('aria-label','Ativar o som'); }); }
@@ -86,7 +86,7 @@
   function abrir(cel){
     if(!lb) return;
     miolo.innerHTML = '';
-    if(cel.classList.contains('card--video')){
+    if(cel.classList.contains('nu-card--video')){
       var src = cel.querySelector('video'), v = document.createElement('video');
       v.src = src.getAttribute('src'); v.poster = src.getAttribute('poster') || src.getAttribute('data-poster') || '';
       v.controls = true; v.autoplay = true; v.muted = false; v.setAttribute('playsinline','');
