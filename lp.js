@@ -3,8 +3,8 @@
   if(!sec) return;
   var v = sec.querySelector('video.bg-video');
   var mq = window.matchMedia('(max-width:900px)');
-  var FONTES = { dk:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-curto.6c7a2f2f.mp4','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-curto-poster.69467b7b.webp'],
-                 mb:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-9x16-curto.22aae311.mp4','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-9x16-curto-poster.f2380707.webp'] };
+  var FONTES = { dk:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-curto.258fbf08.mp4','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-curto-poster.3bd4a145.webp'],
+                 mb:['https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/video/header-bento-9x16-curto.f4816175.mp4','https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/assets/img/header-bento-9x16-curto-poster.b1d5d054.webp'] };
   function depoisDoLoad(fn){ if(document.readyState === 'complete') fn(); else window.addEventListener('load', fn, {once:true}); }
   function tocar(){ if(!v || !v.getAttribute('src')) return; var p = v.play(); if(p && p.catch) p.catch(function(){}); }
   
