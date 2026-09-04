@@ -446,6 +446,48 @@
 (function(){  })();
 ;
 (function(){
+  var reg = document.getElementById('nu-reg');
+  if(!reg) return;
+  var folha = reg.querySelector('.rg-folha');
+  var corpo = reg.querySelector('.rg-corpo');
+  var fecha = reg.querySelector('.rg-x');
+  if(reg.parentElement !== document.body) document.body.appendChild(reg);
+  var voltarPara = null;
+  function abrir(origem){
+    voltarPara = origem || null;
+    reg.hidden = false;
+    corpo.scrollTop = 0;
+    document.documentElement.style.overflow = 'hidden';
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ reg.classList.add('is-aberto'); }); });
+    setTimeout(function(){ try { fecha.focus(); } catch(e){} }, 60);
+  }
+  function fecharModal(){
+    if(reg.hidden) return;
+    reg.classList.remove('is-aberto');
+    document.documentElement.style.overflow = '';
+    var fim = function(){ reg.hidden = true; };
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches) fim(); else setTimeout(fim, 260);
+    if(voltarPara){ try { voltarPara.focus(); } catch(e){} voltarPara = null; }
+  }
+  fecha.addEventListener('click', fecharModal);
+  reg.addEventListener('click', function(e){ if(e.target === reg) fecharModal(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') fecharModal(); });
+  
+  reg.addEventListener('keydown', function(e){
+    if(e.key !== 'Tab') return;
+    var foca = folha.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if(!foca.length) return;
+    var pri = foca[0], ult = foca[foca.length - 1];
+    if(e.shiftKey && document.activeElement === pri){ e.preventDefault(); ult.focus(); }
+    else if(!e.shiftKey && document.activeElement === ult){ e.preventDefault(); pri.focus(); }
+  });
+  
+  [].forEach.call(document.querySelectorAll('[data-nu-reg]'), function(bt){
+    bt.addEventListener('click', function(e){ e.preventDefault(); abrir(bt); });
+  });
+})();
+;
+(function(){
   
   var reduz = matchMedia('(prefers-reduced-motion:reduce)').matches;
   
