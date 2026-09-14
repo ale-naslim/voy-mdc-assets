@@ -599,7 +599,8 @@
     var vh = innerHeight;
     drifts.forEach(function(el){
       var r = el.getBoundingClientRect(); if(r.bottom < 0 || r.top > vh) return;
-      var amp = parseFloat(el.getAttribute('data-nu-drift')) || 33;   
+      var amp = (innerWidth <= 900 && el.hasAttribute('data-nu-drift-mob')) ? (parseFloat(el.getAttribute('data-nu-drift-mob')) || 0)
+              : (parseFloat(el.getAttribute('data-nu-drift')) || 33);   
       var alvo = (prog(r,vh) - .5) * -amp;
       if(el.hasAttribute('data-nu-mola')){
         var st = el.__mola || (el.__mola = {p:alvo, v:0});
