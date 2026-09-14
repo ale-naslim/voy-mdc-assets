@@ -8,3 +8,9 @@ Assets da LP **Voy — Mês do Cliente 2026**, servidos via jsDelivr para o Embe
 - `assets/brand` — logo
 
 Base jsDelivr: `https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/`
+
+## virada/ (R$ 349)
+
+Versão da virada de preço, isolada nesta pasta para não tocar nos arquivos da LP que já está no ar
+(raiz) nem da versão de influenciadores (`influ/`). Assets em `virada/assets/`, código em
+`virada/lp.css` e `virada/lp.js`. O Embed aponta sempre para um commit fixo, nunca para `@main`.
