@@ -39,17 +39,22 @@
   var pedido = false;
   function aproximou(){ if(pedido) return; pedido = true;
     depoisDoCritico(function(){ perto = true; escolher(); aposHeader(function(){ if(redeRuim()) return; liberado = true; escolher(); }); }); }
-  if('IntersectionObserver' in window && v){ var ioB = new IntersectionObserver(function(es){ if(es[es.length-1].isIntersecting){ ioB.disconnect(); aproximou(); } }, {rootMargin:'700px 0px'}); ioB.observe(v); }
+  if('IntersectionObserver' in window && v){ var ioB = new IntersectionObserver(function(es){ if(es[es.length-1].isIntersecting){ ioB.disconnect(); aproximou(); } }, {rootMargin:'700px 0px'}); ioB.observe(v);
+    var ioJa = new IntersectionObserver(function(es){ if(es[es.length-1].isIntersecting){ ioJa.disconnect(); aproximou(); liberaH(); } }); ioJa.observe(v); }
   else aproximou();
   if(mq.addEventListener) mq.addEventListener('change', escolher); else if(mq.addListener) mq.addListener(escolher);
   
   var hv = sec.querySelector('video.palco-anim__v');
   var ANIM = { dk:'https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@8bf54947ad86ce68b27969120168729126eec124/virada/assets/video/header-anim-desk.5b79f19f.mp4', mb:'https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@8bf54947ad86ce68b27969120168729126eec124/virada/assets/video/header-anim-mob.04a74ab3.mp4' };
-  var hLiberado = false, hParado = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var hLiberado = false, hParado = matchMedia('(prefers-reduced-motion:reduce)').matches, hNaTela = true, secNaTela = true;
   function tocarAnim(){ if(hParado || !hv || !hv.getAttribute('src')) return; var p = hv.play(); if(p && p.catch) p.catch(function(){}); }
+  function armaRevela(el){ if(!el) return; el.classList.remove('vivo'); var feito = false;
+    function mostra(){ if(feito) return; feito = true; el.classList.add('vivo'); }
+    if(el.requestVideoFrameCallback) el.requestVideoFrameCallback(mostra);
+    el.addEventListener('timeupdate', function t(){ if(el.currentTime > .04){ el.removeEventListener('timeupdate', t); mostra(); } }); }
   function anim(){ if(!hv || !hLiberado || hParado) return; var f = mq.matches ? ANIM.mb : ANIM.dk;
-    if(hv.getAttribute('src') !== f){ hv.setAttribute('src', f); hv.load(); tocarAnim();
-      if(!headerOk){ hv.addEventListener('canplaythrough', liberaH, {once:true}); hv.addEventListener('error', liberaH, {once:true}); setTimeout(liberaH, 5000); } } }
+    if(hv.getAttribute('src') !== f){ armaRevela(hv); hv.setAttribute('src', f); hv.load(); tocarAnim();
+      if(!headerOk){ hv.addEventListener('canplaythrough', liberaH, {once:true}); hv.addEventListener('error', liberaH, {once:true}); setTimeout(liberaH, 4000); } } }
   depoisDoCritico(function(){ if(!hv || hParado || redeRuim()){ liberaH(); return; } hLiberado = true; anim(); });
   if(mq.addEventListener) mq.addEventListener('change', anim); else if(mq.addListener) mq.addListener(anim);
   
@@ -83,11 +88,15 @@
   var deu = false; function uma(){ if(deu) return; deu = true; requestAnimationFrame(function(){ requestAnimationFrame(entrar); }); }
   pronto.then(uma).catch(uma); setTimeout(uma, 900);   
   if('IntersectionObserver' in window && v){
-    new IntersectionObserver(function(es){ var on = es[es.length-1].isIntersecting; if(on){ if(sec.classList.contains('is-in')) depoisDoLoad(tocar); } else v.pause(); },{rootMargin:'120px 0px'}).observe(sec);
+    new IntersectionObserver(function(es){ var on = es[es.length-1].isIntersecting; secNaTela = on; if(on){ if(sec.classList.contains('is-in')) tocar(); } else v.pause(); },{rootMargin:'120px 0px'}).observe(sec);
   }
   if('IntersectionObserver' in window && hv){
-    new IntersectionObserver(function(es){ if(es[es.length-1].isIntersecting) tocarAnim(); else hv.pause(); },{rootMargin:'80px 0px'}).observe(hv);
+    new IntersectionObserver(function(es){ hNaTela = es[es.length-1].isIntersecting; if(hNaTela) tocarAnim(); else hv.pause(); },{rootMargin:'80px 0px'}).observe(hv);
   }
+  function retoma(){ if(hNaTela && hv && hv.paused) tocarAnim(); if(secNaTela && v && v.paused && sec.classList.contains('is-in')) tocar(); }
+  ['touchend','click','keydown'].forEach(function(ev){ document.addEventListener(ev, retoma, {passive:true}); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) retoma(); });
+  window.addEventListener('pageshow', retoma);
   
   var FIM = Date.parse('2026-09-30T23:59:59-03:00');
   var digs = {}; [].forEach.call(sec.querySelectorAll('.relogio .dig'), function(el){ digs[el.getAttribute('data-u')] = el; });
@@ -136,11 +145,17 @@
         [].forEach.call(e.target.querySelectorAll('img[data-src]'), function(im){ im.src = im.dataset.src; im.removeAttribute('data-src'); });
         perto.unobserve(e.target); });
     },{rootMargin:'600px 500px'});
+    var naTela = [];
     var io = new IntersectionObserver(function(es){
       es.forEach(function(e){ var v = e.target.querySelector('video'); if(!v) return;
-        if(e.isIntersecting){ if(v.preload === 'none') v.preload = 'auto'; if(!reduz){ var p = v.play(); if(p && p.catch) p.catch(function(){}); } }
+        var i = naTela.indexOf(v); if(e.isIntersecting){ if(i < 0) naTela.push(v); } else if(i >= 0) naTela.splice(i, 1);
+        if(e.isIntersecting){ if(v.dataset.poster){ v.poster = v.dataset.poster; delete v.dataset.poster; } if(v.preload === 'none') v.preload = 'auto'; if(!reduz){ var p = v.play(); if(p && p.catch) p.catch(function(){}); } }
         else { try{ v.pause(); }catch(err){} } });
     },{threshold:.35});
+    var retoma = function(){ if(reduz) return; naTela.forEach(function(v){ if(v.paused){ var p = v.play(); if(p && p.catch) p.catch(function(){}); } }); };
+    ['touchend','click','keydown'].forEach(function(ev){ document.addEventListener(ev, retoma, {passive:true}); });
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) retoma(); });
+    window.addEventListener('pageshow', retoma);
     vids.forEach(function(c){ io.observe(c); });
     [].forEach.call(sec.querySelectorAll('.nu-card'), function(c){ perto.observe(c); });
   }
