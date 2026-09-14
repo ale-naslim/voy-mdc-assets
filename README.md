@@ -14,3 +14,8 @@ Base jsDelivr: `https://cdn.jsdelivr.net/gh/ale-naslim/voy-mdc-assets@main/`
 Versão da virada de preço, isolada nesta pasta para não tocar nos arquivos da LP que já está no ar
 (raiz) nem da versão de influenciadores (`influ/`). Assets em `virada/assets/`, código em
 `virada/lp.css` e `virada/lp.js`. O Embed aponta sempre para um commit fixo, nunca para `@main`.
+
+## virada-influ/ (sem preço)
+
+Versão de influenciadores da virada: só `lp.css` e `lp.js`. Usa os mesmos assets de `virada/assets/`
+(mesmo hash, nada duplicado).
