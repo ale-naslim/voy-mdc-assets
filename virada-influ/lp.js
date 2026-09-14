@@ -1,3 +1,4 @@
+;
 (function(){
   var sec = document.getElementById('nu-hero');
   if(!sec) return;
@@ -569,7 +570,7 @@
 })();
 ;
 (function(){
-  
+  document.documentElement.classList.add('js');
   var reduz = matchMedia('(prefers-reduced-motion:reduce)').matches;
   
   if('IntersectionObserver' in window){
